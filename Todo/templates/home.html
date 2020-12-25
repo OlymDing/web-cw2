@@ -1,0 +1,89 @@
+{% extends "layout.html" %}
+{% block content %}
+    {% if todos.items %}
+
+    {% for todo in todos.items %}
+        <article class="media content-section">
+            <div class="media-body">
+                <div class="article-metadata">
+                    <div style="position: relative;">
+                        {% if not todo.finished %}
+                        <a class="btn btn-success btn-sm mt-1 mb-1" href="{{ url_for('finish_todo', todo_id=todo.id) }}">Finish</a>
+                        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('update_todo', todo_id=todo.id) }}">Update</a>
+
+                        {% else %}
+
+
+                        {% if todo.on_time %}
+                            <img class="yes-icon" src="{{url_for('static', filename='icons/yes.png')}}" alt="">
+                        {% else %}
+                            <img class="no-icon" src="{{url_for('static', filename='icons/no.png')}}" alt="">
+                        {% endif %}
+                        
+                        {% endif %}
+                        <!--注意, 每个卡片的点击都应该对应到一个特定的modal, 就需要通过todo.id自动生成对应的modal ID-->
+                        <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal{{todo.id}}">Delete</button>
+
+                        <small>Created: {{ todo.date_posted.strftime('%Y-%m-%d') }}</small>
+                        <small>Deadline: {{ todo.deadline.strftime('%Y-%m-%d') }}</small>
+
+                        {% if finish == "finished" %}
+                        
+                        <small>Finished: {{ todo.date_finished.strftime('%Y-%m-%d') }}</small>
+                        {% endif %}
+                        {% if finish == "unfinished" %}
+                        <span class="ml-5" style="color: rgb(195, 176, 0); font-size:large">{{ todo.days_left }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% if todo.delay %}
+                <h2 style="color: red">{{ todo.title }}</h2>
+                {% else %}
+                <h2>{{ todo.title }}</h2>
+                {% endif %}
+                <p class="article-content">{{ todo.content }}</p>
+
+            </div>
+        </article>
+
+        <!-- Modal -->
+        <div class="modal fade" id="deleteModal{{todo.id}}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Delete Post?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <form action="{{ url_for('delete_todo', todo_id=todo.id, finish=finish) }}" method="POST">
+                    <input class="btn btn-danger" type="submit" value="Delete">
+                </form>
+                </div>
+            </div>
+            </div>
+        </div>
+    {% endfor %}
+    {% for page_num in todos.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=4) %}
+        {% if page_num %}
+            {% if todos.page == page_num %}
+                <a class="btn btn-info mb-4" href="{{url_for('home', page=page_num, finish=finish)}}">{{page_num}}</a>
+            {% else %}
+                <a class="btn btn-outline-info mb-4" href="{{url_for('home', page=page_num, finish=finish)}}">{{page_num}}</a>
+            {% endif %}
+        {% else %}
+        ...
+        {% endif %}
+    {% endfor %}
+
+    {% else %}
+    <h1>No Records</h1>
+    {% endif %}
+
+
+    <a class="btn btn-info" style="position: fixed; right: 20px; bottom: 100px; z-index:100" href="{{url_for('home', finish=finish, order='left')}}">Order by days left</a>
+    <a class="btn btn-info" style="position: fixed; right: 20px; bottom: 60px; z-index:100" href="{{url_for('home', finish=finish, order='created')}}">Order by date post</a>
+
+{% endblock content %}
