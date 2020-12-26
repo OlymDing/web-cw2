@@ -5,7 +5,7 @@ from Blog import app, db, bcrypt, mail
 from Blog.forms import (RegistrationForm, LoginForm,
 UpdateAccountForm, TodoForm,
 RequestResetForm, ResetPasswordForm)
-from Blog.models import User, Todo
+from Blog.models import User, Post
 from flask_login import login_user, current_user, logout_user, login_required
 from datetime import datetime, date
 # import pillow to process images
@@ -25,27 +25,27 @@ def home ():
     order = request.args.get('order', "created", type=str)
     page = request.args.get('page', 1, type = int)
     if finish == "finished":
-        todos = Todo.query.filter_by(author=current_user, finished=True).order_by(Todo.date_finished.desc()).paginate(per_page = 5, page = page)
+        posts = Post.query.filter_by(author=current_user, finished=True).order_by(Post.date_finished.desc()).paginate(per_page = 5, page = page)
 
         home_status = {
             "days":0,
             "curr_position": "Home Page",
             "events":[
                 "<span>You can apply opertions by clicking various buttons</span>",
-                f'<span class="sidebar-font">Finished Number: </span>{Todo.query.filter_by(author = current_user, finished = True).count()}',
-                f'<span class="sidebar-font">Unfinished Number: </span> {Todo.query.filter_by(author = current_user, finished = False).count()}'
+                f'<span class="sidebar-font">Finished Number: </span>{Post.query.filter_by(author = current_user, finished = True).count()}',
+                f'<span class="sidebar-font">Unfinished Number: </span> {Post.query.filter_by(author = current_user, finished = False).count()}'
             ]
         }
 
     elif finish == "unfinished":
         if order == "created":
-            todos = Todo.query.order_by(Todo.date_posted.desc()).filter_by(author=current_user, finished=False).paginate(per_page = 5, page = page)
+            posts = Post.query.order_by(Post.date_posted.desc()).filter_by(author=current_user, finished=False).paginate(per_page = 5, page = page)
         elif order == "left":
-            todos = Todo.query.order_by(Todo.deadline.asc()).filter_by(author=current_user, finished=False).paginate(per_page = 5, page = page)
+            posts = Post.query.order_by(Post.deadline.asc()).filter_by(author=current_user, finished=False).paginate(per_page = 5, page = page)
         else:
             abort(404)
             
-        for todo in todos.items:
+        for todo in posts.items:
             temp_days_left = (todo.deadline - date.today()).days
             if temp_days_left >= 0:
                 todo.days_left = f'{(todo.deadline - date.today()).days} days left'
@@ -59,14 +59,14 @@ def home ():
             "curr_position": "Home Page",
             "events":[
                 "<span>You can apply opertions by clicking various buttons</span>",
-                f'<span class="sidebar-font">Finished Number: </span>{Todo.query.filter_by(author = current_user, finished = True).count()}',
-                f'<span class="sidebar-font">Unfinished Number: </span> {Todo.query.filter_by(author = current_user, finished = False).count()}'
+                f'<span class="sidebar-font">Finished Number: </span>{Post.query.filter_by(author = current_user, finished = True).count()}',
+                f'<span class="sidebar-font">Unfinished Number: </span> {Post.query.filter_by(author = current_user, finished = False).count()}'
             ]
         }
     else:
         abort(404)
 
-    return render_template('home.html', title="Home", todos = todos, finish=finish, status = home_status)
+    return render_template('home.html', title="Home", todos = posts, finish=finish, status = home_status)
 
 
 @app.route('/about')
@@ -185,8 +185,8 @@ def account():
         "curr_position": "Account Page",
         "events":[
             "<span>View or update your personal account info</span>",
-            f'<span class="sidebar-font">Finished Number:  {Todo.query.filter_by(author = current_user, finished = True).count()}</span>',
-            f'<span class="sidebar-font">Unfinished Number:  {Todo.query.filter_by(author = current_user, finished = False).count()}</span>'
+            f'<span class="sidebar-font">Finished Number:  {Post.query.filter_by(author = current_user, finished = True).count()}</span>',
+            f'<span class="sidebar-font">Unfinished Number:  {Post.query.filter_by(author = current_user, finished = False).count()}</span>'
         ]
     }
 
@@ -202,7 +202,7 @@ def new_todo():
     form = TodoForm()
 
     if form.validate_on_submit():
-        todo = Todo(title=form.title.data, content=form.content.data, author=current_user, deadline=form.deadline.data, date_posted = datetime.now())
+        todo = Post(title=form.title.data, content=form.content.data, author=current_user, deadline=form.deadline.data, date_posted = datetime.now())
         db.session.add(todo)
         db.session.commit()
         flash("Your todo has been created !", 'success')
@@ -210,23 +210,23 @@ def new_todo():
     
     todo_status = {
         "days":0,
-        "curr_position": "Todo Page",
+        "curr_position": "Post Page",
         "events":[
             "<span>Start a new todo by filling the form</span>",
             "<span>Remember that deadline should not be set before today !</span>",
-            f'<span class="sidebar-font">Finished Number: </span>{Todo.query.filter_by(author = current_user, finished = True).count()}',
-            f'<span class="sidebar-font">Unfinished Number: </span> {Todo.query.filter_by(author = current_user, finished = False).count()}'
+            f'<span class="sidebar-font">Finished Number: </span>{Post.query.filter_by(author = current_user, finished = True).count()}',
+            f'<span class="sidebar-font">Unfinished Number: </span> {Post.query.filter_by(author = current_user, finished = False).count()}'
         ]
     }
     
-    return render_template('create_todo.html', title="New Todo", form=form, legend="New Todo", status=todo_status)
+    return render_template('create_todo.html', title="New Post", form=form, legend="New Post", status=todo_status)
 
 
 # delete one todo item
 @app.route('/todo/<int:todo_id>/update', methods=["GET", "POST"])
 @login_required
 def update_todo(todo_id):
-    todo = Todo.query.get_or_404(todo_id)
+    todo = Post.query.get_or_404(todo_id)
     form = TodoForm()
 
     if form.validate_on_submit():
@@ -241,8 +241,8 @@ def update_todo(todo_id):
         form.content.data = todo.content
         form.deadline.data = todo.deadline
         
-    return render_template('create_todo.html', title="Update Todo",
-                           form = form, legend = "Update Todo")
+    return render_template('create_todo.html', title="Update Post",
+                           form = form, legend = "Update Post")
 
 
 # delete one todo item
@@ -250,7 +250,7 @@ def update_todo(todo_id):
 @login_required
 def delete_todo(todo_id, finish):
     print(todo_id)
-    todo = Todo.query.get_or_404(todo_id)
+    todo = Post.query.get_or_404(todo_id)
     db.session.delete(todo)
     db.session.commit()
     flash("Your todo has been deleted !", 'success')
@@ -261,7 +261,7 @@ def delete_todo(todo_id, finish):
 @app.route('/finish_todo/<int:todo_id>')
 @login_required
 def finish_todo(todo_id):
-    todo = Todo.query.get_or_404(todo_id)
+    todo = Post.query.get_or_404(todo_id)
     if current_user == todo.author:
         todo.finished = True
         todo.date_finished = datetime.now()

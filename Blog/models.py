@@ -17,7 +17,7 @@ class User(db.Model, UserMixin):
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
     password = db.Column(db.String(60), nullable=False)
     date_created = db.Column(db.Date, nullable = False, default = date.today())
-    todos = db.relationship('Todo', backref='author', lazy=True)
+    posts = db.relationship('Post', backref='author', lazy=True)
 
     def get_reset_token(self, expires_sec = 1800):
         s = Serializer(app.config['SECRET_KEY'], expires_sec) # 创建序列化实例
@@ -36,7 +36,7 @@ class User(db.Model, UserMixin):
         return f"User('{self.username}', '{self.email}', '{self.image_file}')"
 
 
-class Todo(db.Model):
+class Post(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     title = db.Column(db.String(100), nullable = False)
     content = db.Column(db.Text, nullable = False)
@@ -48,4 +48,4 @@ class Todo(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
 
     def __repr__(self):
-        return f"Todo('{self.title}', '{self.date_posted}')"
+        return f"Post('{self.title}', '{self.date_posted}')"
