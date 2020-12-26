@@ -1,10 +1,20 @@
+"""
+storing setting about forms displayed in web pages;
+"""
+
+# the most basic class, as the base class for any customed class;
 from flask_wtf import FlaskForm
+# handles time;
 from datetime import *
-# 这两个import用于设置输入, 和限制文件的类型; 这个FileAllowed是个validator;
-from flask_wtf.file import FileField, FileAllowed
+# classes of fields to constrain the type of form input;
 from wtforms import StringField, TextAreaField, PasswordField, SubmitField, BooleanField, DateField
+# import normal validators for forms;
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+# two server side validators relevant with file;
+from flask_wtf.file import FileField, FileAllowed
+# import pre-defined User model ahead;
 from Todo.models import User
+# serves as one pointer to the Current_user( which is an instance in User table );
 from flask_login import current_user
 
 class RegistrationForm(FlaskForm):
