@@ -1,11 +1,11 @@
 import secrets
 import os
 from flask import render_template, url_for, flash, redirect, request, abort
-from Todo import app, db, bcrypt, mail
-from Todo.forms import (RegistrationForm, LoginForm,
+from Blog import app, db, bcrypt, mail
+from Blog.forms import (RegistrationForm, LoginForm,
 UpdateAccountForm, TodoForm,
 RequestResetForm, ResetPasswordForm)
-from Todo.models import User, Todo
+from Blog.models import User, Todo
 from flask_login import login_user, current_user, logout_user, login_required
 from datetime import datetime, date
 # import pillow to process images

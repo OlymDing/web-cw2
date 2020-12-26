@@ -13,7 +13,7 @@ from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationE
 # two server side validators relevant with file;
 from flask_wtf.file import FileField, FileAllowed
 # import pre-defined User model ahead;
-from Todo.models import User
+from Blog.models import User
 # serves as one pointer to the Current_user( which is an instance in User table );
 from flask_login import current_user
 

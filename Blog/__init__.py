@@ -20,7 +20,7 @@ db = SQLAlchemy(app) # create database instance;
 bcrypt = Bcrypt(app) # create one crypt instance;
 login_manager = LoginManager(app) # create one login managing instance;
 login_manager.login_view = 'login' # redirect view name;
-login_manager.login_message_category = "info" # type of message;
+# login_manager.login_message_category = "info" # type of message;
 
 # mail setting;
 app.config['MAIL_SERVER'] = 'smtp.qq.com'

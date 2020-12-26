@@ -1,5 +1,5 @@
-from Todo import db, bcrypt
-from Todo.models import User, Todo
+from Blog import db, bcrypt
+from Blog.models import User, Todo
 from datetime import *
 import os
 

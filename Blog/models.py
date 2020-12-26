@@ -1,5 +1,5 @@
 # import database instance and login 
-from Todo import db, login_manager, app
+from Blog import db, login_manager, app
 from datetime import datetime, date
 # make default user setting
 from flask_login import UserMixin
