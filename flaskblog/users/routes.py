@@ -1,4 +1,4 @@
-from flask import render_template, url_for, flash, redirect, request, Blueprint
+from flask import render_template, url_for, flash, redirect, request, Blueprint, current_app
 from flask_login import login_user, current_user, logout_user, login_required
 from flaskblog import db, bcrypt
 from flaskblog.models import User, Post
@@ -34,6 +34,7 @@ def login():
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
+            current_app.logger.info(f'user log in: {current_user}')
             return redirect(next_page) if next_page else redirect(url_for('main.home'))
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
