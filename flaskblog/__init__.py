@@ -6,6 +6,7 @@ from flask_mail import Mail
 from flaskblog.config import Config
 import logging
 from flask.logging import default_handler
+from flask_restful import Api
 
 bcrypt = Bcrypt()
 login_manager = LoginManager()
@@ -16,6 +17,9 @@ mail = Mail()
 
 app = Flask(__name__)
 app.config.from_object(Config)
+
+# initial api;
+api = Api(app)
 
 app.logger.setLevel(logging.DEBUG)
 file_handler = logging.FileHandler('./flaskblog/static/record.log')
@@ -34,7 +38,9 @@ from flaskblog.users.routes import users
 from flaskblog.posts.routes import posts
 from flaskblog.main.routes import main
 from flaskblog.errors.handlers import errors
+from flaskblog.interface.interfaces import interfaces
 app.register_blueprint(users)
 app.register_blueprint(posts)
 app.register_blueprint(main)
 app.register_blueprint(errors)
+app.register_blueprint(interfaces)
