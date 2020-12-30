@@ -14,7 +14,7 @@
             <p class="article-content">{{ post.content }}</p>
             <!--controls, such as like buttons, comments, and collection-->
             <div class="controls">
-                <span class="btn btn-info">like</span>
+                <span class="btn btn-info like" ref="{{post.id}}">like</span>
             </div>
           </div>
         </article>
@@ -32,4 +32,23 @@
         ...
       {% endif %}
     {% endfor %}
+
+<script>
+$(function() {
+    $(".like").on('click', function () {
+        $.ajax({
+            type:"post",
+            url:'/like/' + $(this).attr('ref'),
+            success: function(data) {
+                console.log(data)
+            },
+            error: () => {
+                console.log('error')
+            }
+
+        })
+    })
+})
+
+</script>
 {% endblock content %}
