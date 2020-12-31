@@ -41,13 +41,17 @@ class Post(db.Model):
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    likes = db.Column(db.Integer, default = 0)
 
     def __repr__(self):
         return f"Post('{self.title}', '{self.date_posted}')"
 
+# 联合主键
 class Like(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), primary_key=True)
     user_name = db.Column(db.Text, db.ForeignKey('user.username'), nullable=False)
-    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
     post_title = db.Column(db.String(100), db.ForeignKey('post.title'), nullable=False)
+
+    def __repr__(self):
+        return f"Like('user: {self.user_id}', post: '{self.post_id}')"

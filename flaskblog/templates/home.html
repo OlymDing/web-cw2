@@ -15,6 +15,7 @@
             <!--controls, such as like buttons, comments, and collection-->
             <div class="controls">
                 <span class="btn btn-info like" ref="{{post.id}}">like</span>
+                <span id="like_count{{post.id}}" >{{post.likes}}</span>
             </div>
           </div>
         </article>
@@ -35,17 +36,20 @@
 
 <script>
 $(function() {
-    $(".like").on('click', function () {
+    // 为了防止下面回调函数中的this指向错误;
+    $like_btns = $(".like")
+
+    $like_btns.on('click', function () {
+        $like_btn = $(this)
         $.ajax({
-            type:"post",
+            type:"POST",
             url:'/like/' + $(this).attr('ref'),
             success: function(data) {
-                console.log(data)
+                $like_btn.next().html(data)
             },
             error: () => {
                 console.log('error')
             }
-
         })
     })
 })
