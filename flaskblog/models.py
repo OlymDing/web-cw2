@@ -50,8 +50,6 @@ class Post(db.Model):
 class Like(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'), primary_key=True)
-    user_name = db.Column(db.Text, db.ForeignKey('user.username'), nullable=False)
-    post_title = db.Column(db.String(100), db.ForeignKey('post.title'), nullable=False)
 
     def __repr__(self):
         return f"Like('user: {self.user_id}', post: '{self.post_id}')"

@@ -12,3 +12,4 @@
 2020-12-29 09:57:40,243 - INFO - user log in: User('Ding Jianqiao', 'ding@qq.com', 'default.jpg')
 2020-12-30 21:17:51,615 - INFO - user log in: User('Ding Jianqiao', 'ding@qq.com', 'default.jpg')
 2020-12-31 22:30:04,341 - INFO - user log in: User('ding', 'ding@qq.com', 'default.jpg')
+2020-12-31 23:25:34,276 - INFO - user log in: User('ding', 'ding@qq.com', 'default.jpg')

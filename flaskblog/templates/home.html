@@ -40,12 +40,33 @@ $(function() {
     $like_btns = $(".like")
 
     $like_btns.on('click', function () {
+
         $like_btn = $(this)
         $.ajax({
             type:"POST",
             url:'/like/' + $(this).attr('ref'),
             success: function(data) {
-                $like_btn.next().html(data)
+                // 还没点赞
+                if (!data.founded) {
+                    bootoast({
+                        message: 'like this post !',
+                        type: 'success',
+                        position: 'right-bottom',
+                        timeout: 2
+                    })
+                    $like_btn.next().html(data.count)
+                }
+                // 点过赞了
+                else {
+                    bootoast({
+                        message: 'remove one like !',
+                        type: 'success',
+                        position: 'right-bottom',
+                        timeout: 2
+                    })
+                    $like_btn.next().html(data.count)
+                }
+
             },
             error: () => {
                 console.log('error')
