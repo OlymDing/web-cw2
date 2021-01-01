@@ -36,7 +36,7 @@
                             <div class="modal-footer">
                                 <form style="width: 60%" id="comment-form-{{post.id}}">
                                     <!-- <textarea class="form-control"></textarea> -->
-                                    <input type="text" name="comment" class="form-control">
+                                    <input type="text" name="comment" class="form-control" required = "required">
                                 </form>
                                 <button type="button" class="btn btn-primary btn-sm send-button" ref="{{post.id}}" style="width: 25%">
                                     Comment
@@ -110,27 +110,35 @@ $(function() {
     // 添加评论
     $(".send-button").on("click", function () {
         $post_id = $(this).attr('ref')
-        
-        $.ajax({
-            type: "POST",
-            url: '/make_comment/'+$post_id,
-            data: $("#comment-form-"+$post_id).serialize(),
-            success: function (data) {
-                console.log("secc")
-                let container = $("<div></div>")
-                let user = $("<span></span>").text(data.user_id)
-                let content = $("<span></span>").text(data.content)
-                let time = $("<span></span>").text(data.time)
-                container.append(user)
-                container.append(content)
-                container.append(time)
-                $("#comment-list-"+$post_id).append(container)
-                document.getElementById("comment-form-"+$post_id).reset()
-            },
-            error: function () {
-                console.log("fail")
-            }
-        })
+        if ( ! ($("#comment-form-"+$post_id).serialize().trim()=="comment=")) {
+            $.ajax({
+                type: "POST",
+                url: '/make_comment/'+$post_id,
+                data: $("#comment-form-"+$post_id).serialize(),
+                success: function (data) {
+                    console.log("secc")
+                    let container = $("<div></div>")
+                    let user = $("<span></span>").text(data.user_id)
+                    let content = $("<span></span>").text(data.content)
+                    let time = $("<span></span>").text(data.time)
+                    container.append(user)
+                    container.append(content)
+                    container.append(time)
+                    $("#comment-list-"+$post_id).append(container)
+                    document.getElementById("comment-form-"+$post_id).reset()
+                },
+                error: function () {
+                    console.log("fail")
+                }
+            })
+        } else {
+            bootoast({
+                message: 'Don\'t make an empty comment !',
+                type: 'danger',
+                position: 'right-bottom',
+                timeout: 2
+            })
+        }
     })
 
     // 加载帖子的评论
