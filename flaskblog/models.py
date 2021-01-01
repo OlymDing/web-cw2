@@ -38,7 +38,7 @@ class User(db.Model, UserMixin):
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
-    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.now)
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     likes = db.Column(db.Integer, default = 0)
@@ -53,3 +53,13 @@ class Like(db.Model):
 
     def __repr__(self):
         return f"Like('user: {self.user_id}', post: '{self.post_id}')"
+
+class Comment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text, nullable=False)
+    date_commented = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable = False)
+
+    def __repr__(self):
+        return f"Comment('id: {self.id}, user: {self.user_id}, post: {self.post_id},\ncontent: {self.content}')"
