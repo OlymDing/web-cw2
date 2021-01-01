@@ -17,38 +17,42 @@
                 <span class="btn btn-info like" ref="{{post.id}}">like</span>
                 <span id="like_count{{post.id}}" >{{post.likes}}</span>
 
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal{{post.id}}">
-                    Comment
+
+                <button type="button" class="btn btn-primary btn-info comment-btn" ref="{{post.id}}" data-toggle="modal" data-target="#modal{{post.id}}">
+                    Comments
                 </button>
 
-                <div class="modal fade" id="modal{{post.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h5 class="modal-title" id="exampleModalLabel">{{post.title}}</h5>
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                          </button>
-                        </div>
-                        <div class="modal-body">
-                          <form id="comment-form-{{post.id}}">
-                            <div class="form-group">
-                              <label for="message-text" class="col-form-label">Message:</label>
-                              <textarea class="form-control" id="message-text"></textarea>
+                <div class="modal fade" id="modal{{post.id}}" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
                             </div>
-                          </form>
+                            <div class="modal-body" id="comment-list-{{post.id}}">
+                            </div>
+                            <div class="modal-footer">
+                                <form style="width: 60%" id="comment-form-{{post.id}}">
+                                    <!-- <textarea class="form-control"></textarea> -->
+                                    <input type="text" name="comment" class="form-control">
+                                </form>
+                                <button type="button" class="btn btn-primary btn-sm send-button" ref="{{post.id}}" style="width: 25%">
+                                    Comment
+                                </button>
+                            </div>
                         </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                          <button type="button" class="btn btn-primary send-button" ref="{{post.id}}" data-dismiss="modal">Send message</button>
-                        </div>
-                      </div>
                     </div>
-                  </div>
+                </div>
+
             </div>
           </div>
         </article>
     {% endfor %}
+
+    
+
 
     <!--pagination-->
     {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
@@ -65,9 +69,9 @@
 
 <script>
 $(function() {
-    // 为了防止下面回调函数中的this指向错误;
-    $like_btns = $(".like")
 
+    // 点赞
+    $like_btns = $(".like") // 为了防止下面回调函数中的this指向错误;
     $like_btns.on('click', function () {
 
         $like_btn = $(this)
@@ -103,8 +107,54 @@ $(function() {
         })
     })
 
+    // 添加评论
     $(".send-button").on("click", function () {
-        $(this).attr('ref')
+        $post_id = $(this).attr('ref')
+        
+        $.ajax({
+            type: "POST",
+            url: '/make_comment/'+$post_id,
+            data: $("#comment-form-"+$post_id).serialize(),
+            success: function (data) {
+                console.log("secc")
+                let container = $("<div></div>")
+                let user = $("<span></span>").text(data.user_id)
+                let content = $("<span></span>").text(data.content)
+                let time = $("<span></span>").text(data.time)
+                container.append(user)
+                container.append(content)
+                container.append(time)
+                $("#comment-list-"+$post_id).append(container)
+                document.getElementById("comment-form-"+$post_id).reset()
+            },
+            error: function () {
+                console.log("fail")
+            }
+        })
+    })
+
+    // 加载帖子的评论
+    $(".comment-btn").on("click", function () {
+        $post_id = $(this).attr('ref')
+        $.ajax({
+            type: "GET",
+            dataType: 'json',
+            url: "/get_comments/"+$post_id,
+            success: function (result) {
+                $("#comment-list-"+$post_id).html("")
+                console.log(result)
+                result.data.forEach((item) => {
+                    let container = $("<div></div>")
+                    let user = $("<span></span>").text(item.user_id)
+                    let content = $("<span></span>").text(item.content)
+                    let time = $("<span></span>").text(item.time)
+                    container.append(user)
+                    container.append(content)
+                    container.append(time)
+                    $("#comment-list-"+$post_id).append(container)
+                });
+            }
+        })
     })
 })
 
