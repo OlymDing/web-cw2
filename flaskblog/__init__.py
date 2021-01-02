@@ -7,17 +7,26 @@ from flaskblog.config import Config
 import logging
 from flask.logging import default_handler
 from flask_restful import Api
+import os
 
 bcrypt = Bcrypt()
 login_manager = LoginManager()
 login_manager.login_view = 'users.login'
 login_manager.login_message_category = 'info'
-mail = Mail()
 
 
 app = Flask(__name__)
 app.config.from_object(Config)
 
+app.config['MAIL_SERVER'] = 'smtp.qq.com'
+app.config['MAIL_PORT'] = '465'
+app.config['MAIL_USE_SSL']=True
+
+# 环境变量, 来存储用户的隐私信息, 如邮箱和密码
+app.config['MAIL_USERNAME'] = os.environ.get('EMAIL_USER')
+app.config['MAIL_PASSWORD'] = os.environ.get('EMAIL_PASS')
+
+mail = Mail(app)
 # initial api;
 api = Api(app)
 
@@ -32,7 +41,6 @@ app.logger.addHandler(file_handler)
 db = SQLAlchemy(app)
 bcrypt.init_app(app)
 login_manager.init_app(app)
-mail.init_app(app)
 
 from flaskblog.users.routes import users
 from flaskblog.posts.routes import posts
