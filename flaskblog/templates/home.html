@@ -70,7 +70,6 @@
 
 <script>
 $(function() {
-
     // 点赞
     $like_btns = $(".like") // 为了防止下面回调函数中的this指向错误;
     $like_btns.on('click', function () {
@@ -81,15 +80,22 @@ $(function() {
             url:'/like/' + $(this).attr('ref'),
             success: function(data) {
                 // 还没点赞
-                if (!data.founded) {
-                    notify("like one post !", "info")
-                    $like_btn.children().html(data.count)
+                if (data.logged) {
+                    if (!data.founded) {
+                        notify("like one post !", "info")
+                        $like_btn.children().html(data.count)
+                    }
+                    // 点过赞了
+                    else {
+                        notify("remove one like", "info")
+                        $like_btn.children().html(data.count)
+                    }
                 }
-                // 点过赞了
                 else {
-                    notify("remove one like", "info")
+                    notify("please log in first !", "danger")
                     $like_btn.children().html(data.count)
                 }
+                    
 
             },
             error: () => {
@@ -107,7 +113,12 @@ $(function() {
                 url: '/make_comment/'+$post_id,
                 data: $("#comment-form-"+$post_id).serialize(),
                 success: function (item) {
-                    add_item(item)
+                    if (item.logged) {
+                        add_item(item)
+                    }
+                    else {
+                        notify("please login first !", "danger")
+                    }
                 },
                 error: function () {
                     console.log("fail")

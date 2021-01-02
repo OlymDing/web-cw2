@@ -19,7 +19,7 @@ def like(post_id):
             count = Like.query.filter_by(post_id = post_id).count()
             Post.query.get(post_id).likes = count
             db.session.commit()
-            return jsonify({'founded': True, 'count':count})
+            return jsonify({'logged': True, 'founded': True, 'count':count})
         # 还没有点赞:
         else:
             like = Like(user_id = current_user.id, post_id = post_id)
@@ -27,9 +27,9 @@ def like(post_id):
             count = Like.query.filter_by(post_id = post_id).count()
             Post.query.get(post_id).likes = count
             db.session.commit()
-            return jsonify({'founded': False, 'count':count})
+            return jsonify({'logged': True, 'founded': False, 'count':count})
     else:
-        return jsonify({'founded': False})
+        return jsonify({'logged': False, 'founded': False})
 
 @interfaces.route("/make_comment/<int:post_id>", methods=["POST"])
 def make_comment(post_id):
@@ -38,7 +38,9 @@ def make_comment(post_id):
         new_comment = Comment(content = comment_str, author = current_user, post_id = post_id)
         db.session.add(new_comment)
         db.session.commit()
-    return jsonify({'content': new_comment.content, 'time': new_comment.date_commented.strftime("%Y %m %d %H:%M "), 'username': new_comment.author.username, 'img': new_comment.author.image_file })
+        return jsonify({'logged': True,'content': new_comment.content, 'time': new_comment.date_commented.strftime("%Y %m %d %H:%M "), 'username': new_comment.author.username, 'img': new_comment.author.image_file })
+    else:
+        return jsonify({'logged': False})
 
 @interfaces.route("/get_comments/<int:post_id>")
 def get_comments(post_id):
