@@ -37,7 +37,7 @@
                             <div class="modal-footer">
                                 <form style="width: 60%" id="comment-form-{{post.id}}">
                                     <!-- <textarea class="form-control"></textarea> -->
-                                    <input type="text" name="comment" class="form-control" required = "required">
+                                    <input type="text" name="comment" class="form-control" onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}">
                                 </form>
                                 <button type="button" class="btn btn-primary btn-sm send-button" ref="{{post.id}}" style="width: 25%">
                                     Comment
@@ -70,6 +70,7 @@
 
 <script>
 $(function() {
+
     // 点赞
     $like_btns = $(".like") // 为了防止下面回调函数中的this指向错误;
     $like_btns.on('click', function () {
