@@ -13,7 +13,7 @@
             <h2><a class="article-title" href="{{ url_for('posts.post', post_id=post.id) }}">{{ post.title }}</a></h2>
             <p class="article-content">{{ post.content }}</p>
             <!--controls, such as like buttons, comments, and collection-->
-            <div class="controls">
+            <div>
                 <span class="btn btn-info like" ref="{{post.id}}">
                     like
                     <span id="like_count{{post.id}}" >{{post.likes}}</span>
@@ -116,6 +116,7 @@ $(function() {
         } else {
             notify('Don\'t make an empty comment !', 'danger')
         }
+        $("input").val('')
     })
 
     // 加载帖子的评论
@@ -136,9 +137,11 @@ $(function() {
     })
 
     function add_item (item) {
+        let filename ="profile_pics/" + item.img
         let container = $("<div class='comment-container'></div>")
         let header = $("<div class='comment-header'></div>")
-        header.append($("<span class='comment-user'></span>").text(item.user_id))
+        let profile_img = $(`<div><img class='rounded-circle comment-img' src='/static/profile_pics/${item.img}''><a href="/user/${item.username}">${item.username}</></div>`)
+        header.append(profile_img)
         header.append($("<span class='comment-time'></span>").text(item.time))
         container.append(header)
         container.append($("<span class='comment-content'></span>").text(item.content))

@@ -85,11 +85,8 @@ a.article-title:hover {
   font-size: 2.5rem;
 }
 
-.controls{
-    width: 50%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.like{
+    margin-right: 20px;
 }
 
 .comment-container{
@@ -99,9 +96,16 @@ a.article-title:hover {
     padding: 10px
 }
 
+.comment-img {
+    height: 30px;
+    width: 30px;
+    margin-right: 16px;
+  }
+
 .comment-header{
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 .comment-user{
