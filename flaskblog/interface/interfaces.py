@@ -38,12 +38,12 @@ def make_comment(post_id):
         new_comment = Comment(content = comment_str, user_id = current_user.id, post_id = post_id)
         db.session.add(new_comment)
         db.session.commit()
-    return jsonify({'content': new_comment.content, 'time': new_comment.date_commented, 'user_id': new_comment.user_id })
+    return jsonify({'content': new_comment.content, 'time': new_comment.date_commented.strftime("%Y %m %d %H:%M "), 'user_id': new_comment.user_id })
 
 @interfaces.route("/get_comments/<int:post_id>")
 def get_comments(post_id):
     comments = Comment.query.filter_by(post_id = post_id).all()
     comment_list = []
     for i in comments:
-        comment_list.append({'content': i.content, 'time': i.date_commented, 'user_id': i.user_id })
+        comment_list.append({'content': i.content, 'time': i.date_commented.strftime("%Y %m %d %H:%M "), 'user_id': i.user_id })
     return jsonify({'data': comment_list})

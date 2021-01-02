@@ -5,7 +5,7 @@
     {% for post in posts.items %}
         <article class="media content-section">
           <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}">
-          <div class="media-body">
+          <div class="media-body article-body">
             <div class="article-metadata">
               <a class="mr-2" href="{{ url_for('users.user_posts', username=post.author.username) }}">{{ post.author.username }}</a>
               <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
@@ -14,10 +14,11 @@
             <p class="article-content">{{ post.content }}</p>
             <!--controls, such as like buttons, comments, and collection-->
             <div class="controls">
-                <span class="btn btn-info like" ref="{{post.id}}">like</span>
-                <span id="like_count{{post.id}}" >{{post.likes}}</span>
-
-
+                <span class="btn btn-info like" ref="{{post.id}}">
+                    like
+                    <span id="like_count{{post.id}}" >{{post.likes}}</span>
+                </span>
+                
                 <button type="button" class="btn btn-primary btn-info comment-btn" ref="{{post.id}}" data-toggle="modal" data-target="#modal{{post.id}}">
                     Comments
                 </button>
@@ -81,23 +82,13 @@ $(function() {
             success: function(data) {
                 // 还没点赞
                 if (!data.founded) {
-                    bootoast({
-                        message: 'like this post !',
-                        type: 'success',
-                        position: 'right-bottom',
-                        timeout: 2
-                    })
-                    $like_btn.next().html(data.count)
+                    notify("like one post !", "info")
+                    $like_btn.children().html(data.count)
                 }
                 // 点过赞了
                 else {
-                    bootoast({
-                        message: 'remove one like !',
-                        type: 'success',
-                        position: 'right-bottom',
-                        timeout: 2
-                    })
-                    $like_btn.next().html(data.count)
+                    notify("remove one like", "info")
+                    $like_btn.children().html(data.count)
                 }
 
             },
@@ -115,29 +106,15 @@ $(function() {
                 type: "POST",
                 url: '/make_comment/'+$post_id,
                 data: $("#comment-form-"+$post_id).serialize(),
-                success: function (data) {
-                    console.log("secc")
-                    let container = $("<div></div>")
-                    let user = $("<span></span>").text(data.user_id)
-                    let content = $("<span></span>").text(data.content)
-                    let time = $("<span></span>").text(data.time)
-                    container.append(user)
-                    container.append(content)
-                    container.append(time)
-                    $("#comment-list-"+$post_id).append(container)
-                    document.getElementById("comment-form-"+$post_id).reset()
+                success: function (item) {
+                    add_item(item)
                 },
                 error: function () {
                     console.log("fail")
                 }
             })
         } else {
-            bootoast({
-                message: 'Don\'t make an empty comment !',
-                type: 'danger',
-                position: 'right-bottom',
-                timeout: 2
-            })
+            notify('Don\'t make an empty comment !', 'danger')
         }
     })
 
@@ -152,15 +129,33 @@ $(function() {
                 $("#comment-list-"+$post_id).html("")
                 console.log(result)
                 result.data.forEach((item) => {
-                    let container = $("<div></div>")
-                    container.append($("<span class='comment-user'></span>").text(item.user_id))
-                    container.append($("<span class='comment-content'></span>").text(item.content))
-                    container.append($("<span class='comment-time'></span>").text(item.time))
-                    $("#comment-list-"+$post_id).append(container)
+                    add_item(item)
                 });
             }
         })
     })
+
+    function add_item (item) {
+        let container = $("<div class='comment-container'></div>")
+        let header = $("<div class='comment-header'></div>")
+        header.append($("<span class='comment-user'></span>").text(item.user_id))
+        header.append($("<span class='comment-time'></span>").text(item.time))
+        container.append(header)
+        container.append($("<span class='comment-content'></span>").text(item.content))
+        $("#comment-list-"+$post_id).append(container)
+    }
+
+    function notify (info, signal) {
+        bootoast({
+            message: info,
+            type: signal,
+            position: 'right-bottom',
+            timeout: 2
+        })
+    }
+
+
+
 })
 
 </script>
