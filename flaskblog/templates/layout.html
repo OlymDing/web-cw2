@@ -19,7 +19,7 @@
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="{{url_for('static', filename='jquery.js')}}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="{{url_for('static', filename='popper.js')}}"></script>
     <script src="{{url_for('static', filename='bootstrap.js')}}"></script>
     <script src="{{url_for('static', filename='bootoast.js')}}"></script>
 
@@ -91,7 +91,7 @@
     let steel = document.getElementsByClassName('bg-steel')[0]
     let color = localStorage.getItem('color')
     if (color == null) {
-        console.log('not found')
+        console.log('use default steel color (grey)')
     } else {
         steel.style.background = color
     }

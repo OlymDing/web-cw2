@@ -15,3 +15,6 @@
 2020-12-31 23:25:34,276 - INFO - user log in: User('ding', 'ding@qq.com', 'default.jpg')
 2021-01-01 10:40:04,203 - INFO - user log in: User('ding@qq.com', 'ding@qq.com', 'default.jpg')
 2021-01-01 22:26:34,548 - INFO - user log in: User('ding', 'ding@qq.com', 'default.jpg')
+2021-01-02 01:14:55,577 - INFO - user log in: User('ding', 'ding@qq.com', 'default.jpg')
+2021-01-02 01:29:43,929 - INFO - user log in: User('ding', 'ding@qq.com', 'default.jpg')
+2021-01-02 01:32:36,341 - INFO - user log in: User('another', '123@qq.com', 'default.jpg')

@@ -153,12 +153,9 @@ $(function() {
                 console.log(result)
                 result.data.forEach((item) => {
                     let container = $("<div></div>")
-                    let user = $("<span></span>").text(item.user_id)
-                    let content = $("<span></span>").text(item.content)
-                    let time = $("<span></span>").text(item.time)
-                    container.append(user)
-                    container.append(content)
-                    container.append(time)
+                    container.append($("<span class='comment-user'></span>").text(item.user_id))
+                    container.append($("<span class='comment-content'></span>").text(item.content))
+                    container.append($("<span class='comment-time'></span>").text(item.time))
                     $("#comment-list-"+$post_id).append(container)
                 });
             }

@@ -2,17 +2,23 @@
 {% block content %}
 <div class="content-section">
     <form method="POST" action="">
-        {{ form.hidden_tag() }}
         <fieldset class="form-group">
             <legend class="border-bottom mb-4">{{ legend }}</legend>
             <div class="form-group">
-                {{ form.color.label(class="form-control-label") }}
-                {{ form.color(class="form-control form-control-lg", type="color") }}
+                <label for="" class="form-control-label">Stell Color</label>
+                <input id="color-input" type="color" class="form-control form-control-lg" type="color" >
             </div>
         </fieldset>
         <div class="form-group">
-            {{ form.submit(class="btn btn-outline-info") }}
+            <button id="color-submit" class="btn btn-outline-info">Save Settings</button>
         </div>
     </form>
 </div>
+
+<script>
+$("#color-submit").on("click", function () {
+    localStorage.setItem("color", $("#color-input").val())
+} )
+
+</script>
 {% endblock content %}
