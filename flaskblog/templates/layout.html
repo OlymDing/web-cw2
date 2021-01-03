@@ -144,7 +144,7 @@ $(function () {
 
             },
             error: () => {
-                console.log('error')
+                notify("request error !", 'danger')
             }
         })
     })
@@ -160,13 +160,14 @@ $(function () {
                 success: function (item) {
                     if (item.logged) {
                         add_item(item)
+                        notify("make a comment !", "info")
                     }
                     else {
                         notify("please login first !", "danger")
                     }
                 },
-                error: function () {
-                    console.log("fail")
+                error: () => {
+                    notify("request error !", 'danger')
                 }
             })
         } else {
@@ -187,9 +188,18 @@ $(function () {
                 console.log(result)
                 result.data.forEach((item) => {
                     add_item(item)
-                });
+                })
+            },
+            error: () => {
+                notify("request error !", 'danger')
             }
         })
+    })
+
+    $("#remember_check").on("change", function () {
+        if ($(this).prop('checked')) {
+            notify("cookie is applied if remember login", 'warning')
+        }
     })
 
     function add_item (item) {
@@ -208,8 +218,7 @@ $(function () {
         bootoast({
             message: info,
             type: signal,
-            position: 'right-bottom',
-            timeout: 2
+            position: 'right-bottom'
         })
     }
 
