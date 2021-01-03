@@ -15,6 +15,42 @@
       </div>
       <h2 class="article-title">{{ post.title }}</h2>
       <p class="article-content">{{ post.content }}</p>
+
+        <div>
+            <span class="btn btn-info like" ref="{{post.id}}">
+                like
+                <span id="like_count{{post.id}}" >{{post.likes}}</span>
+            </span>
+            
+            <button type="button" class="btn btn-primary btn-info comment-btn" ref="{{post.id}}" data-toggle="modal" data-target="#modal{{post.id}}">
+                Comments
+            </button>
+        
+            <div class="modal fade" id="modal{{post.id}}" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body" id="comment-list-{{post.id}}">
+                        </div>
+                        <div class="modal-footer">
+                            <form style="width: 60%" id="comment-form-{{post.id}}">
+                                <!-- <textarea class="form-control"></textarea> -->
+                                <input type="text" name="comment" class="form-control" onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}">
+                            </form>
+                            <button type="button" class="btn btn-primary btn-sm send-button" ref="{{post.id}}" style="width: 25%">
+                                Comment
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+        </div>
     </div>
   </article>
   <!-- Modal -->
@@ -36,4 +72,6 @@
       </div>
     </div>
   </div>
+
+
 {% endblock content %}
