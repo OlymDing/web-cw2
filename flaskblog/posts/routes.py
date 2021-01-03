@@ -20,7 +20,8 @@ def new_post():
         current_app.logger.info(f'Post created: {post}')
         return redirect(url_for('main.home'))
     return render_template('create_post.html', title='New Post',
-                           form=form, legend='New Post')
+                           form=form, legend='New Post',
+                           sidebar_info = ['Create a new post !', 'Don\' leave the form empty '])
 
 
 @posts.route("/post/<int:post_id>")
