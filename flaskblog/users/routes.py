@@ -37,6 +37,7 @@ def login():
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
             current_app.logger.info(f'user log in: {current_user}')
+            flash("Login successfully", 'info')
             return redirect(next_page) if next_page else redirect(url_for('main.home'))
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
@@ -48,6 +49,7 @@ def login():
 def logout():
     current_app.logger.info(f"user log out: {current_user}")
     logout_user()
+    flash('Successfully Logout !', 'info')
     return redirect(url_for('main.home'))
 
 
