@@ -96,3 +96,7 @@ content: hahahha')
 2021-01-04 00:50:10,848 - INFO - Account created: User('Tom', '1013752750@qq.com', 'default.jpg')
 2021-01-04 00:50:11,080 - INFO - user log in: User('Tom', '1013752750@qq.com', 'default.jpg')
 2021-01-04 00:50:11,338 - INFO - Account created: User('Tom', '1013752750@qq.com', 'default.jpg')
+2021-01-04 10:48:40,538 - ERROR - 404 error
+2021-01-04 11:06:16,564 - ERROR - 404 error
+2021-01-04 11:06:19,013 - ERROR - 404 error
+2021-01-04 11:06:19,581 - ERROR - 404 error

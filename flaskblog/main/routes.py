@@ -30,3 +30,7 @@ def settings():
     settings = SettingForm()
     sidebar_info = ['Modify the color of your web !']
     return render_template('settings.html', title='Settings', form = settings, legend = "Settings", sidebar_info = sidebar_info)
+
+@main.route("/favicon.ico")
+def get_fav():
+    return url_for('static', filename="icons/favicon.ico")
